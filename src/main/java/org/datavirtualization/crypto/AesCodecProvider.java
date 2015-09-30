@@ -4,14 +4,15 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.playdom.manimal.config.ManimalConfig;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
-import com.playdom.manimal.util.CryptographyUtil;
+
+import org.datavirtualization.config.CryptographyConfig;
+import org.datavirtualization.util.CryptographyUtil;
 
 /**
  * Codec provider based on the AES encryption algorithm.
