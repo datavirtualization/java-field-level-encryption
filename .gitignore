@@ -18,3 +18,6 @@ chromedriver.log
 .pmd
 .pmdruleset
 .metadata
+
+# Mac OS X files
+.DS_Store
