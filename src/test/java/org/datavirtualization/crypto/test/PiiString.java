@@ -21,13 +21,11 @@ public class PiiString implements Serializable {
     @JsonIgnore
     private transient String  clearTextValue;
 
-    public PiiString(String value)
-    {
+    public PiiString(String value) {
         this(value, true);
     }
 
-    protected PiiString(String value, boolean checkValueCipherText)
-    {
+    protected PiiString(String value, boolean checkValueCipherText) {
         Preconditions.checkNotNull(value, "value may not be null");
         if (checkValueCipherText)
             piiCodec.assertCipherText(value);
@@ -39,13 +37,12 @@ public class PiiString implements Serializable {
      * string. Does not check whether value is an encrypted pii or not. Used by
      * the code where one PII needs to be constructed from another.
      * 
-     * @see SecretsConfig#PII_SECRET
+     * @see CryptographyConfig#PII_SECRET
      * @param value
      *            that represents a PII
      * @return an instance of {@link PiiString}
      */
-    public static PiiString createUnsafely(String value)
-    {
+    public static PiiString createUnsafely(String value) {
         return (value == null) ? null : new PiiString(value, false);
     }
 
@@ -57,12 +54,11 @@ public class PiiString implements Serializable {
      * @param value
      *            a PII as clear text
      * 
-     * @see SecretsConfig#PII_SECRET
+     * @see CryptographyConfig#PII_SECRET
      * @return an instance of {@link PiiString}
      */
     @JsonIgnore
-    public static PiiString fromClearText(String value)
-    {
+    public static PiiString fromClearText(String value) {
         if (value == null)
             return null;
 
@@ -72,14 +68,12 @@ public class PiiString implements Serializable {
     }
 
     /**
-     * @see SecretsConfig#PII_SECRET
+     * @see CryptographyConfig#PII_SECRET
      * @return the value as clear text. The method returns the same string value
      *         as {@link #getValue()} if PII encryption is not enabled.
      */
-    public String getClearTextValue()
-    {
-        if (clearTextValue == null)
-        {
+    public String getClearTextValue() {
+        if (clearTextValue == null) {
             clearTextValue = piiCodec.decrypt(getValue());
         }
 
@@ -91,25 +85,21 @@ public class PiiString implements Serializable {
      *         encrypted PII.
      */
     @JsonIgnore
-    public String getValue()
-    {
+    public String getValue() {
         return value;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return value;
     }
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (this == o)
             return true;
 
-        if (o instanceof PiiString)
-        {
+        if (o instanceof PiiString) {
             PiiString that = (PiiString) o;
             return Objects.equal(this.getValue(), that.getValue());
         }
@@ -117,8 +107,7 @@ public class PiiString implements Serializable {
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hashCode(value);
     }
 }

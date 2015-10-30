@@ -1,12 +1,13 @@
 
 package org.datavirtualization.crypto;
 
+import org.datavirtualization.config.CryptographyConfig;
 import org.datavirtualization.util.CryptographyUtil;
 
 /**
  * <p>
  * Allows implementation of encrypt/decrypt/compare for custom schemes as needed
- * for various Manimal cryptography things. It is not required for all providers
+ * for various cryptography things. It is not required for all providers
  * to implement all methods of the interface. Asymmetry is possible especially
  * in cases where encryption is one way. Asymmetric interfaces should return
  * {@link UnsupportedOperationException} where appropriate.

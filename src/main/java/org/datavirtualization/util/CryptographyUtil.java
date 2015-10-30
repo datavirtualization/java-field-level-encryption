@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Throwables;
 import com.google.common.io.BaseEncoding;
+import org.datavirtualization.config.CryptographyConfig;
 import org.datavirtualization.crypto.AesCodecProvider;
 import org.datavirtualization.crypto.EncryptionCodecProvider;
 import org.datavirtualization.crypto.PassthroughCodecProvider;
@@ -27,7 +28,7 @@ import org.datavirtualization.crypto.PassthroughCodecProvider;
  * @author bvesco, Nov 13, 2009
  */
 public final class CryptographyUtil {
-    public static final EncryptionCodecProvider piiCodec          = SecretsConfig.PII_SECRET == null ? new PassthroughCodecProvider() : new AesCodecProvider(SecretsConfig.PII_SECRET);
+    public static final EncryptionCodecProvider piiCodec          = CryptographyConfig.PII_SECRET == null ? new PassthroughCodecProvider() : new AesCodecProvider(CryptographyConfig.PII_SECRET);
 
     private static final Logger                 logger            = LoggerFactory.getLogger(CryptographyUtil.class);
 
@@ -50,11 +51,11 @@ public final class CryptographyUtil {
         try {
             Mac mac = Mac.getInstance(algorithm);
             // todo: secret is weak: switch to be hex encoding: https://trello.com/c/lXasud5g/1381-secret-key-encoding-is-weak
-            mac.init(new SecretKeySpec(secret.getBytes(ManimalConfig.APP_CHARSET), mac.getAlgorithm()));
+            mac.init(new SecretKeySpec(secret.getBytes(CryptographyConfig.APP_CHARSET), mac.getAlgorithm()));
 
             for (String value : plainText)
             {
-                mac.update(value.getBytes(ManimalConfig.APP_CHARSET));
+                mac.update(value.getBytes(CryptographyConfig.APP_CHARSET));
             }
 
             byte[] result = mac.doFinal();
@@ -89,7 +90,7 @@ public final class CryptographyUtil {
             String toEncrypt = salt + password;
 
             // todo: secret is weak: switch to be hex encoding: https://trello.com/c/lXasud5g/1381-secret-key-encoding-is-weak
-            md5Digest.update(toEncrypt.getBytes(ManimalConfig.APP_CHARSET), 0, toEncrypt.length());
+            md5Digest.update(toEncrypt.getBytes(CryptographyConfig.APP_CHARSET), 0, toEncrypt.length());
 
             return checkHash(md5Digest.digest(), expected);
         }
@@ -109,7 +110,7 @@ public final class CryptographyUtil {
         try {
             MessageDigest md5Digest = MessageDigest.getInstance("MD5");
 
-            md5Digest.update(value.getBytes(ManimalConfig.APP_CHARSET), 0, value.length());
+            md5Digest.update(value.getBytes(CryptographyConfig.APP_CHARSET), 0, value.length());
 
             return Hex.encodeHexString(md5Digest.digest());
         }
@@ -126,7 +127,7 @@ public final class CryptographyUtil {
      * @return A hex encoded string representing the SHA-256 encoded input.
      */
     public static String sha256(String value)  {
-        return sha256(value, SecretsConfig.APP_SECRET.get());
+        return sha256(value, CryptographyConfig.APP_SECRET);
     }
 
     /**
@@ -150,6 +151,22 @@ public final class CryptographyUtil {
         try {
             final KeyGenerator keyGenerator = KeyGenerator.getInstance(ALGORITHM_AES);
             keyGenerator.init(128);
+            final SecretKey secretKey = keyGenerator.generateKey();
+
+            return BaseEncoding.base16().encode(secretKey.getEncoded());
+        }
+        catch (NoSuchAlgorithmException e)  {
+            throw new RuntimeException("No support for AES encryption provided by the platform", e);
+        }
+    }
+
+    /**
+     * @return base16 / Hex encoded key for AES-256 encryption.
+     */
+    public static String generateAes256Key()  {
+        try {
+            final KeyGenerator keyGenerator = KeyGenerator.getInstance(ALGORITHM_AES);
+            keyGenerator.init(256);
             final SecretKey secretKey = keyGenerator.generateKey();
 
             return BaseEncoding.base16().encode(secretKey.getEncoded());

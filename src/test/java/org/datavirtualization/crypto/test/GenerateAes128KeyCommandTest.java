@@ -1,5 +1,9 @@
 package org.datavirtualization.crypto.test;
 
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
 import org.datavirtualization.util.CryptographyUtil;
 
 /**

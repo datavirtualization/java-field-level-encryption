@@ -6,7 +6,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import org.springframework.beans.factory.annotation.Required;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
@@ -47,9 +46,7 @@ public class AesCodecProvider implements EncryptionCodecProvider
      * {@link #setPasswordKey(String)} is required before using any method of
      * the class.
      */
-    public AesCodecProvider()
-    {
-    }
+    public AesCodecProvider() {}
 
     /**
      * Creates an initialized instance of the class.
@@ -58,63 +55,52 @@ public class AesCodecProvider implements EncryptionCodecProvider
      *            The password to use in generating the AES encryption. Must be
      *            32 hex characters in length as noted above.
      */
-    public AesCodecProvider(final String passwordKey)
-    {
-        try
-        {
+    public AesCodecProvider(final String passwordKey) {
+        try {
             setPasswordKey(passwordKey);
         }
-        catch (DecoderException e)
-        {
+        catch (DecoderException e) {
             throw Throwables.propagate(e);
         }
     }
 
     @Override
-    public String encrypt(final String cleartext) throws RuntimeException
-    {
-        try
-        {
+    public String encrypt(final String cleartext) throws RuntimeException {
+        try {
             final Cipher aesCipher = Cipher.getInstance(ENC_SPEC);
             final SecretKey secretKey = new SecretKeySpec(passwordKey, ALGO);
 
             aesCipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            final byte[] cipherbytes = aesCipher.doFinal(cleartext.getBytes(ManimalConfig.APP_CHARSET));
+            final byte[] cipherbytes = aesCipher.doFinal(cleartext.getBytes(CryptographyConfig.APP_CHARSET));
             return Hex.encodeHexString(cipherbytes);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             throw Throwables.propagate(e);
         }
     }
 
     @Override
-    public void assertCipherText(String text)
-    {
+    public void assertCipherText(String text) {
         decrypt(text);
     }
 
     @Override
-    public String decrypt(final String ciphertext)
-    {
-        try
-        {
+    public String decrypt(final String ciphertext) {
+        try {
             final Cipher aesCipher = Cipher.getInstance(ENC_SPEC);
             final SecretKey secretKey = new SecretKeySpec(passwordKey, ALGO);
 
             aesCipher.init(Cipher.DECRYPT_MODE, secretKey);
             final byte[] cipherbytes = aesCipher.doFinal(Hex.decodeHex(ciphertext.toCharArray()));
-            return new String(cipherbytes, ManimalConfig.APP_CHARSET);
+            return new String(cipherbytes, CryptographyConfig.APP_CHARSET);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             throw new RuntimeException("unable to decipher " + ciphertext, e);
         }
     }
 
     @Override
-    public boolean compare(final String cleartext, final String ciphertext)
-    {
+    public boolean compare(final String cleartext, final String ciphertext) {
         return ciphertext.equals(encrypt(cleartext));
     }
 
@@ -128,9 +114,7 @@ public class AesCodecProvider implements EncryptionCodecProvider
      * @throws DecoderException
      *             when there's a problem with the format of your key.
      */
-    @Required
-    public void setPasswordKey(final String passwordKey) throws DecoderException
-    {
+    public void setPasswordKey(final String passwordKey) throws DecoderException {
         Preconditions.checkState(this.passwordKey == null, "The passwordKey was previously set and is not allowed to be set a second time");
         Preconditions.checkArgument(passwordKey.length() == KEY_LEN, "The passwordKey must be exactly %s bytes long but was %s bytes", KEY_LEN, passwordKey.length());
 

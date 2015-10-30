@@ -4,8 +4,7 @@ package org.datavirtualization.crypto;
  * Does not do any encryption at all. Essentially a pass-through implementation.
  * 
  */
-public class PassthroughCodecProvider implements EncryptionCodecProvider
-{
+public class PassthroughCodecProvider implements EncryptionCodecProvider {
     @Override
     public String encrypt(String cleartext) {
         return cleartext;
