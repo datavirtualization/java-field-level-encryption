@@ -10,9 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CryptographyConfig {
     /** The primary application secret used to check signatures */
-    public static final String APP_SECRET = 
-        newRequiredConfigValue("app.secret", "app secret not set in your properties file", 
-            String.class);
+    public static final String APP_SECRET = "a1cc5e57cd469950c317c05625edc9dc";
+        // newRequiredConfigValue("app.secret", "app secret not set in your properties file", 
+        //    String.class);
 
     /** The properties file name. The file should be on the classpath. */
     private static final String       SECRETS_FILE = "classpath:properties/secrets.{0}.properties";
@@ -24,6 +24,7 @@ public class CryptographyConfig {
     static {
     //     loadPropsFrom(SECRETS_FILE, props);
         props.setProperty("app.secret","a1cc5e57cd469950c317c05625edc9dc");
+        props.setProperty("","");
     }
 
     /**
@@ -100,8 +101,8 @@ public class CryptographyConfig {
      * health monitor. The purpose of this is to prevent misconfigured servers
      * from being included in the server pool.
      */
-    public static final String APP_CHARACTER_ENCODING = 
-        newDefaultConfigValue("app.character.encoding", "UTF-8", String.class).replace("\"", "").replace("\'", "");
+    public static final String APP_CHARACTER_ENCODING = "UTF-8";
+        // newDefaultConfigValue("app.character.encoding", "UTF-8", String.class).replace("\"", "").replace("\'", "");
 
     /**
      * An instance of {@link Charset} for the charset specified in
@@ -120,7 +121,8 @@ public class CryptographyConfig {
      *
      * @see PiiModule
      */
-    public static final String PII_SECRET = newDefaultConfigValue("app.pii.secret", null, String.class);
+    public static final String PII_SECRET = "C8AA3C7B134B09DD43C0BC67801CE35A";
+        //newDefaultConfigValue("app.pii.secret", null, String.class);
 
 
     /**
