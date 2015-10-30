@@ -11,8 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CryptographyConfig {
     /** The primary application secret used to check signatures */
     public static final String APP_SECRET = "a1cc5e57cd469950c317c05625edc9dc";
-        // newRequiredConfigValue("app.secret", "app secret not set in your properties file", 
-        //    String.class);
 
     /** The properties file name. The file should be on the classpath. */
     private static final String       SECRETS_FILE = "classpath:properties/secrets.{0}.properties";
@@ -22,7 +20,6 @@ public class CryptographyConfig {
     protected static final Properties props = new Properties();
 
     static {
-    //     loadPropsFrom(SECRETS_FILE, props);
         props.setProperty("app.secret","a1cc5e57cd469950c317c05625edc9dc");
         props.setProperty("","");
     }
@@ -34,53 +31,6 @@ public class CryptographyConfig {
      * will of course not be affected.
      */
     private static final String       TOKEN_COMMON = "common";
-
-    /**
-     * Load properties from the given filename into the given Properties
-     * instance. The filename can include a {0} replacement token and if it
-     * does, a "common" properties file will first be searched for and loaded.
-     * Then the environment specific file will be merged on top of it (overrides
-     * duplicated values).
-     * 
-     * @param filename
-     *            The name of the properties file to load. Can include a {0}
-     *            token which will be replaced with the environment name. See
-     *            {@link EnvironmentResolver}.
-     * @param into
-     *            The properties instance to load into. It is allowed for this
-     *            instance to already contain other properties. In this case,
-     *            any new loaded properties will override those pre-existing
-     *            ones.
-     */
-    /*
-    protected static void loadPropsFrom(String filename, Properties into) {
-        try {
-            String commonFilename = MessageFormat.format(filename, TOKEN_COMMON);
-            if (!commonFilename.equals(filename)) {
-                Resource commonResource = ApplicationEnvironmentUtil.getResource(commonFilename);
-                if ((commonResource != null) && commonResource.exists()) {
-                    into.load(commonResource.getInputStream());
-                }
-            }
-
-            Resource resource = ApplicationEnvironmentUtil.getResource(filename);
-            if (resource == null || !resource.exists()) {
-                throw new RuntimeException("Could not find the " + filename + " file");
-            }
-            into.load(resource.getInputStream());
-        }
-        catch (IOException ioe) {
-            throw new RuntimeException(filename + " file found but failed to load");
-        }
-    }
-
-    protected static void loadPropsFrom(List<String> filenames, Properties into) {
-        for (String filename : filenames) {
-            loadPropsFrom(filename, into);
-        }
-    }
-    */
-
 
     /**
      * Get the cached properties that have been loaded/merged.
@@ -102,8 +52,7 @@ public class CryptographyConfig {
      * from being included in the server pool.
      */
     public static final String APP_CHARACTER_ENCODING = "UTF-8";
-        // newDefaultConfigValue("app.character.encoding", "UTF-8", String.class).replace("\"", "").replace("\'", "");
-
+ 
     /**
      * An instance of {@link Charset} for the charset specified in
      * {@link #APP_CHARACTER_ENCODING}
@@ -122,8 +71,6 @@ public class CryptographyConfig {
      * @see PiiModule
      */
     public static final String PII_SECRET = "C8AA3C7B134B09DD43C0BC67801CE35A";
-        //newDefaultConfigValue("app.pii.secret", null, String.class);
-
 
     /**
      * Retrieves a value associated with the {@code key} and converts it to the
